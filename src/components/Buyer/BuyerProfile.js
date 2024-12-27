@@ -1,12 +1,12 @@
 import React from "react";
 import { Card, Row, Col } from "react-bootstrap";
-import './BuyerDashBoard.css';
+import "./BuyerDashBoard.css";
 
-const BuyerProfile = () => {
+const BuyerProfile = ({ userPhoto }) => {
   const farmer = {
     name: "John Doe",
     idNo: "F12345",
-    photo: "https://via.placeholder.com/150",
+    photo: userPhoto || "https://via.placeholder.com/150", // Dynamic user photo or fallback
     mobile: "+1-234-567-8901",
     address: "123 Green Valley, Countryside, State, ZIP",
     farmingArea: "25 acres",

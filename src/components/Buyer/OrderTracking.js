@@ -1,46 +1,55 @@
-import React, { useState } from 'react';
+import React from 'react';
+import './BuyerDashBoard.css'; // For custom styles
 
 const OrderTracking = () => {
-  const [orderId, setOrderId] = useState('');
-  const [orderStatus, setOrderStatus] = useState(null);
-
-  // Sample order statuses (this could come from an API or database)
-  const sampleOrderStatuses = {
-    '12345': 'In Progress',
-    '67890': 'Shipped',
-    '11121': 'Delivered',
-  };
-
-  const handleTrackOrder = () => {
-    // Simulate fetching order status based on orderId
-    if (sampleOrderStatuses[orderId]) {
-      setOrderStatus(sampleOrderStatuses[orderId]);
-    } else {
-      setOrderStatus('Order not found');
+  const orderDetails = {
+    name: 'Rohit Kshirsagar',
+    address: 'WHITE HOUSE CDAC MET HOSTEL NASHIK, XQJG+M47, Sadashiv Nagar, Sadguru Nagar, Nashik - 422009, Maharashtra',
+    phone: '7887644654',
+    item: {
+      name: 'boAt Nirvana Ion with 120 Hours Playback',
+      color: 'Black',
+      seller: 'Namepic',
+      price: '₹1,602',
+      deliveryStatus: [
+        { date: 'Sun, 22nd Dec', status: 'Order Confirmed' },
+        { date: 'Mon, 23rd Dec', status: 'Shipped' },
+        { date: 'Wed, 25th Dec', status: 'Out for Delivery' },
+        { date: 'Wed, 25th Dec', status: 'Delivered' }
+      ],
+      returnPolicy: 'Jan 01, 2025'
     }
   };
 
   return (
-    <div className="order-tracking-container">
-      <h2>Track Your Order</h2>
-      <div className="order-tracking-input">
-        <input
-          type="text"
-          placeholder="Enter your Order ID"
-          value={orderId}
-          onChange={(e) => setOrderId(e.target.value)}
-          className="order-tracking-input-field"
-        />
-        <button onClick={handleTrackOrder} className="order-tracking-button">
-          Track Order
-        </button>
+    <div className="order-tracking">
+      <div className="delivery-address">
+        <h3>Delivery Address</h3>
+        <p>{orderDetails.name}</p>
+        <p>{orderDetails.address}</p>
+        <p>Phone number: {orderDetails.phone}</p>
       </div>
-      {orderStatus && (
-        <div className="order-tracking-status">
-          <h3>Order Status:</h3>
-          <p>{orderStatus}</p>
+
+      <div className="order-details">
+        <h3>Order Details</h3>
+        <div className="item">
+          <p><strong>{orderDetails.item.name}</strong></p>
+          <p>Color: {orderDetails.item.color}</p>
+          <p>Seller: {orderDetails.item.seller}</p>
+          <p>Price: {orderDetails.item.price}</p>
         </div>
-      )}
+        <div className="tracking">
+          <h4>Tracking</h4>
+          <ul>
+            {orderDetails.item.deliveryStatus.map((status, index) => (
+              <li key={index}>
+                <span>{status.date}</span>: <strong>{status.status}</strong>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p>Return policy valid till: {orderDetails.item.returnPolicy}</p>
+      </div>
     </div>
   );
 };

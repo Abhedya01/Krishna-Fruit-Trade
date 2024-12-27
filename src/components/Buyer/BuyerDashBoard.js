@@ -15,6 +15,8 @@ import {
   FaTruck,
   FaMoneyBill,
   FaBoxes,
+  FaBars,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import "./BuyerDashBoard.css";
 import CommunicationWithAdmin from "./CommunicationWithAdmin";
@@ -25,14 +27,36 @@ import PaymentManagement from "./PaymentManagement";
 import ProductCatalog from "./ProductCatalog";
 import FooterContent from "./FooterContent";
 import BhomeDash from "./BhomeDash";
+import BuyerProfile from "./BuyerProfile"; // Import the BuyerProfile component
 
 const BuyerDashBoard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [userPhoto, setUserPhoto] = useState(null);
+  const [userName, setUserName] = useState("John Doe");
+
+  // Handle logout logic
+  const handleLogout = () => {
+    alert("User logged out!");
+  };
+
+  // Handle profile photo upload
+  const handleProfileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserPhoto(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
       case "dashboard":
-        return <BhomeDash/>;
+        return <BhomeDash />;
       case "communication":
         return <CommunicationWithAdmin />;
       case "orderHistory":
@@ -45,6 +69,8 @@ const BuyerDashBoard = () => {
         return <PaymentManagement />;
       case "productCatalog":
         return <ProductCatalog />;
+      case "buyerProfile":
+        return <BuyerProfile userPhoto={userPhoto} userName={userName} />; // Pass user photo and name
       default:
         return <div>Welcome to the Buyer Dashboard!</div>;
     }
@@ -52,7 +78,6 @@ const BuyerDashBoard = () => {
 
   return (
     <div className="buyer-dashboard">
-      {/* Navbar */}
       <Navbar expand="lg" className="navbar px-3 sticky-top shadow">
         <Container>
           <Navbar.Brand href="#" className="navbar-brand">
@@ -70,14 +95,60 @@ const BuyerDashBoard = () => {
                 <FaHome className="me-2" />
                 Dashboard
               </Nav.Link>
-              <Nav.Link
-                href="#communication"
-                onClick={() => setActiveTab("communication")}
-                className="nav-link"
+
+              {/* Profile Dropdown */}
+              <Nav.Item
+                className="nav-link user-logo"
+                onMouseEnter={() => setShowProfileMenu(true)}
+                onMouseLeave={() => setShowProfileMenu(false)}
               >
-                <FaUser className="me-2" />
-                Communication
-              </Nav.Link>
+                <div className="user-photo-container">
+                  <img
+                    src={userPhoto || "https://via.placeholder.com/40"}
+                    alt="User"
+                    className="user-photo"
+                  />
+                  <span className="user-name">{userName}</span>
+                </div>
+                {showProfileMenu && (
+                  <div className="profile-menu shadow-sm">
+                    <div
+                      className="menu-item"
+                      onClick={() => setActiveTab("buyerProfile")}
+                    >
+                      Profile
+                    </div>
+                    <div
+                      className="menu-item"
+                      onClick={() => setActiveTab("orderHistory")}
+                    >
+                      Orders
+                    </div>
+                    <div
+                      className="menu-item"
+                      onClick={() => alert("Go to Notifications")}
+                    >
+                      Notifications
+                    </div>
+                    <div className="menu-item" onClick={handleLogout}>
+                      <FaSignOutAlt className="me-2" />
+                      Logout
+                    </div>
+                  </div>
+                )}
+              </Nav.Item>
+
+              {/* Profile Upload Button */}
+              <input
+                type="file"
+                id="profile-upload"
+                accept="image/*"
+                onChange={handleProfileUpload}
+                style={{ display: "none" }}
+              />
+              <label htmlFor="profile-upload" className="btn btn-link">
+                Upload Profile Photo
+              </label>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -87,140 +158,85 @@ const BuyerDashBoard = () => {
       <Container fluid className="main-container">
         <Row className="vh-100">
           {/* Sidebar */}
-          <Col xs={12} md={3} className="sidebar shadow-sm">
-            <Nav className="flex-column">
-              <Button
-                className={`sidebar-btn ${activeTab === "dashboard" ? "active" : ""}`}
-                onClick={() => setActiveTab("dashboard")}
-              >
-                <FaHome className="me-2" />
-                Dashboard
-              </Button>
-              <Button
-                className={`sidebar-btn ${activeTab === "communication" ? "active" : ""}`}
-                onClick={() => setActiveTab("communication")}
-              >
-                <FaUser className="me-2" />
-                Communication
-              </Button>
-              <Button
-                className={`sidebar-btn ${activeTab === "orderHistory" ? "active" : ""}`}
-                onClick={() => setActiveTab("orderHistory")}
-              >
-                <FaListAlt className="me-2" />
-                Order History
-              </Button>
-              <Button
-                className={`sidebar-btn ${activeTab === "orderPlacement" ? "active" : ""}`}
-                onClick={() => setActiveTab("orderPlacement")}
-              >
-                <FaShoppingCart className="me-2" />
-                Order Placement
-              </Button>
-              <Button
-                className={`sidebar-btn ${activeTab === "orderTracking" ? "active" : ""}`}
-                onClick={() => setActiveTab("orderTracking")}
-              >
-                <FaTruck className="me-2" />
-                Order Tracking
-              </Button>
-              <Button
-                className={`sidebar-btn ${activeTab === "paymentManagement" ? "active" : ""}`}
-                onClick={() => setActiveTab("paymentManagement")}
-              >
-                <FaMoneyBill className="me-2" />
-                Payment Management
-              </Button>
-              <Button
-                className={`sidebar-btn ${activeTab === "productCatalog" ? "active" : ""}`}
-                onClick={() => setActiveTab("productCatalog")}
-              >
-                <FaBoxes className="me-2" />
-                Product Catalog
-              </Button>
-            </Nav>
+          <Col
+            xs={sidebarCollapsed ? 1 : 12}
+            md={sidebarCollapsed ? 1 : 3}
+            className={`sidebar shadow-sm ${sidebarCollapsed ? "collapsed" : ""}`}
+          >
+            <div
+              className="sidebar-toggle"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            >
+              <FaBars />
+            </div>
+            {!sidebarCollapsed && (
+              <Nav className="flex-column">
+                <Button
+                  className={`sidebar-btn ${activeTab === "dashboard" ? "active" : ""}`}
+                  onClick={() => setActiveTab("dashboard")}
+                >
+                  <FaHome className="me-2" />
+                  Dashboard
+                </Button>
+                <Button
+                  className={`sidebar-btn ${activeTab === "communication" ? "active" : ""}`}
+                  onClick={() => setActiveTab("communication")}
+                >
+                  <FaUser className="me-2" />
+                  Communication
+                </Button>
+                <Button
+                  className={`sidebar-btn ${activeTab === "orderHistory" ? "active" : ""}`}
+                  onClick={() => setActiveTab("orderHistory")}
+                >
+                  <FaListAlt className="me-2" />
+                  Order History
+                </Button>
+                <Button
+                  className={`sidebar-btn ${activeTab === "orderPlacement" ? "active" : ""}`}
+                  onClick={() => setActiveTab("orderPlacement")}
+                >
+                  <FaShoppingCart className="me-2" />
+                  Order Placement
+                </Button>
+                <Button
+                  className={`sidebar-btn ${activeTab === "orderTracking" ? "active" : ""}`}
+                  onClick={() => setActiveTab("orderTracking")}
+                >
+                  <FaTruck className="me-2" />
+                  Order Tracking
+                </Button>
+                <Button
+                  className={`sidebar-btn ${activeTab === "paymentManagement" ? "active" : ""}`}
+                  onClick={() => setActiveTab("paymentManagement")}
+                >
+                  <FaMoneyBill className="me-2" />
+                  Payment Management
+                </Button>
+                <Button
+                  className={`sidebar-btn ${activeTab === "productCatalog" ? "active" : ""}`}
+                  onClick={() => setActiveTab("productCatalog")}
+                >
+                  <FaBoxes className="me-2" />
+                  Product Catalog
+                </Button>
+                <Button
+                  className={`sidebar-btn ${activeTab === "buyerProfile" ? "active" : ""}`}
+                  onClick={() => setActiveTab("buyerProfile")}
+                >
+                  <FaUser className="me-2" />
+                  Profile
+                </Button>
+              </Nav>
+            )}
           </Col>
 
           {/* Content Area */}
-          <Col xs={12} md={9} className="content-area">
+          <Col xs={sidebarCollapsed ? 11 : 9} md={sidebarCollapsed ? 11 : 9} className="content-area">
             <div className="scrollable-content">{renderContent()}</div>
           </Col>
         </Row>
       </Container>
-      <div className="footer-form-container">
-      <div className="query-form">
-        <h2>Quick Query For Import & Export Data</h2>
-        <p className="contact-info">
-          <i className="bi bi-telephone"></i> +91-9560780014
-          <br />
-          <i className="bi bi-envelope"></i> sales@exportimportdata.in
-        </p>
-        <form>
-          <div className="row g-3">
-            <div className="col-md-4">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Your Name"
-                required
-              />
-            </div>
-            <div className="col-md-4">
-              <input
-                type="email"
-                className="form-control"
-                placeholder="Your Email"
-                required
-              />
-            </div>
-            <div className="col-md-4">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Organization Name"
-                required
-              />
-            </div>
-          </div>
-          <div className="row g-3 mt-3">
-            <div className="col-md-4">
-              <div className="input-group">
-                <span className="input-group-text">+91</span>
-                <input
-                  type="tel"
-                  className="form-control"
-                  placeholder="Phone Number"
-                  required
-                />
-              </div>
-            </div>
-            <div className="col-md-4">
-              <select className="form-select" required>
-                <option value="">Shipment Mode</option>
-                <option value="air">Air</option>
-                <option value="sea">Sea</option>
-                <option value="land">Land</option>
-              </select>
-            </div>
-            <div className="col-md-4">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Your Requirement (Product/HS Code)"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit" className="btn btn-submit mt-4">
-            Submit
-          </button>
-        </form>
-      </div>
-      </div>
-      {/* Footer */}
-      <footer className="footer">
-        <FooterContent />
-      </footer>
     </div>
   );
 };
