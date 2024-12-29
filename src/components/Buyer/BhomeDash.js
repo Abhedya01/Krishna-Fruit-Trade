@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./BuyerDashBoard.css"; // Import the CSS file
 
+// Import local images
+// import cavendishImage from "../../assets/RedBanana.jpeg"; // Replace with actual paths
+// import redBananaImage from "../../assets/redBanana.jpg";
+// import plantainImage from "../../assets/plantain.jpg";
+// import burroImage from "../../assets/burro.jpg";
+
 const BhomeDash = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [cart, setCart] = useState({});
 
   // Simulate fetching data
-  useEffect(() => {
-    setFeaturedProducts([
-      { id: 1, name: "Cavendish Banana", price: "$1.20 / lb", image: "https://via.placeholder.com/150" },
-      { id: 2, name: "Red Banana", price: "$1.50 / lb", image: "https://via.placeholder.com/150" },
-      { id: 3, name: "Plantain Banana", price: "$0.99 / lb", image: "https://via.placeholder.com/150" },
-      { id: 4, name: "Burro Banana", price: "$1.30 / lb", image: "https://via.placeholder.com/150" },
-    ]);
-  }, []);
+  // useEffect(() => {
+  //   setFeaturedProducts([
+  //     { id: 1, name: "Cavendish Banana", price: "$1.20 / lb", image: cavendishImage },
+  //     { id: 2, name: "Red Banana", price: "$1.50 / lb", image: redBananaImage },
+  //     { id: 3, name: "Plantain Banana", price: "$0.99 / lb", image: plantainImage },
+  //     { id: 4, name: "Burro Banana", price: "$1.30 / lb", image: burroImage },
+  //   ]);
+  // }, []);
 
   // Handle adding and removing quantities
   const updateCart = (productId, increment) => {

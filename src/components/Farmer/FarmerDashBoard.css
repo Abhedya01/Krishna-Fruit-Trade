@@ -11,15 +11,51 @@
   color: #fff;
   border-right: none;
   height: 100vh;
-  
-  
+  transition: transform 0.3s ease-in-out;
 }
+/* Menu Button (Symbol) */
+.menu-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 20px; /* Reduced size */
+  display: flex;
+  align-items: center; /* Align symbol and label */
+  gap: 5px; /* Space between symbol and text */
+}
+
+.menu-btn i {
+  font-size: 18px; /* Further reduce the icon size */
+}
+
+.menu-btn:hover {
+  color: #dcdcdc; /* Subtle hover effect */
+}
+
+/* Sidebar Menu Button (Specific if needed) */
+.sidebar {
+  position: fixed; /* Ensure it remains visible */
+  top: 10px;
+  left: 10px; /* Adjust position to fit design */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+.menu-btn {
+  position: fixed; /* Ensure it remains visible */
+  top: 10px;
+  left: 10px; /* Adjust position to fit design */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
+
+
 .sidebar .btn {
   font-size: 1rem;
   font-weight: 500;
   color: #fff;
   margin: 10px 0;
-  padding: 15px;
+  
   background: transparent;
   border: none;
   text-align: left;
